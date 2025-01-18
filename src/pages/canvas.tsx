@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { Stage, Layer, Line } from 'react-konva';
-import useUserStore, { Drawing } from '../stores/useUserStore';
+import useUserStore, { Drawing } from '../hooks/useCanvas';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { nanoid } from 'nanoid';
 import UserList from '../components/UserList';

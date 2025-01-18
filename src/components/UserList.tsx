@@ -1,5 +1,5 @@
 import React from 'react';
-import useUserStore, { User } from '../stores/useUserStore';
+import useUserStore, { User } from '../hooks/useCanvas';
 
 const UserList: React.FC = () => {
     const { users } = useUserStore();

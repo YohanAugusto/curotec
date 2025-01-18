@@ -24,7 +24,7 @@ interface StoreState {
   addDrawing: (drawing: Drawing) => void;
 }
 
-const useUserStore = create<StoreState>((set) => ({
+const useCanvas = create<StoreState>((set) => ({
   users: [],
   drawings: [],
   currentUser: null,
@@ -59,4 +59,4 @@ const useUserStore = create<StoreState>((set) => ({
   }
 }));
 
-export default useUserStore;
+export default useCanvas;
