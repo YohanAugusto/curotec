@@ -46,7 +46,6 @@ const useCanvas = create<StoreState>((set) => ({
       })
     );
 
-    // Load persisted state from session storage
     const savedDrawings = JSON.parse(sessionStorage.getItem('canvasState') || '[]');
     if (savedDrawings.length > 0) {
       savedDrawings.forEach((drawing: Drawing) => socket.emit('newDrawing', drawing));
