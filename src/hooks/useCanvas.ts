@@ -24,6 +24,29 @@ interface StoreState {
   addDrawing: (drawing: Drawing) => void;
 }
 
+/**
+ * Custom hook to manage canvas state and socket interactions.
+ *
+ * @typedef {Object} StoreState
+ * @property {Array} users - List of users connected to the canvas.
+ * @property {Array} drawings - List of drawings on the canvas.
+ * @property {Object|null} currentUser - The current user interacting with the canvas.
+ * @property {Function} addUser - Function to add a new user.
+ * @property {Function} connectSocket - Function to establish socket connections and handle events.
+ * @property {Function} addDrawing - Function to add a new drawing.
+ *
+ * @function addUser
+ * @param {string} username - The username of the user to be added.
+ * @description Adds a new user to the canvas and emits the 'addUser' event via socket.
+ *
+ * @function connectSocket
+ * @description Establishes socket connections and sets up event listeners for 'updateUsers' and 'newDrawing' events.
+ * Also restores saved drawings from session storage.
+ *
+ * @function addDrawing
+ * @param {Object} drawing - The drawing object to be added.
+ * @description Emits the 'addDrawing' event via socket to add a new drawing.
+ */
 const useCanvas = create<StoreState>((set) => ({
   users: [],
   drawings: [],

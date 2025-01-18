@@ -8,6 +8,16 @@ const Home = () => {
   const navigate = useNavigate();
   const { addUser, connectSocket } = useUserStore();
 
+  /**
+   * Handles the form submission event.
+   *
+   * @param {React.FormEvent<HTMLFormElement>} e - The form event object.
+   * @returns {void}
+   *
+   * This function prevents the default form submission behavior,
+   * generates a username if not provided, adds the user, connects to the socket,
+   * and navigates to the canvas page.
+   */
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const generatedName = 'User-'+uuid().slice(0, 5)

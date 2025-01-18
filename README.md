@@ -12,6 +12,10 @@ This project is a web application built with modern technologies including React
 - **lint**: Runs ESLint to check for code quality issues.
 - **preview**: Previews the built project using Vite.
 
+## TODO
+
+Properly remove erase the lines when select erase tool. Need more time to make it work as expected.
+
 ## Getting Started
 
 1. **Clone the repository**:
