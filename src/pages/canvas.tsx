@@ -2,17 +2,24 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { Stage, Layer, Line } from 'react-konva';
-import useUserStore, { Drawing, User } from '../stores/useUserStore';
+import useUserStore, { Drawing } from '../stores/useUserStore';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { nanoid } from 'nanoid';
+import UserList from '../components/UserList';
+import Toolbar from '../components/Toolbar';
+
+const DEFAULT_BRUSH_SIZE = 2;
+const DEFAULT_TOOL = 'pencil';
+const DEFAULT_COLOR = '#000000';
+const ERASER_COLOR = '#242424';
 
 const Canvas = () => {
   const navigate = useNavigate();
-  const { currentUser, drawings, addDrawing, connectSocket, users } = useUserStore();
+  const { currentUser, drawings, addDrawing, connectSocket } = useUserStore();
   const stageRef = useRef(null);
-  const [tool, setTool] = useState('pencil'); 
+  const [tool, setTool] = useState(DEFAULT_TOOL);
   const [currentLine, setCurrentLine] = useState<Drawing | null>(null);
-  const [brushSize, setBrushSize] = useState(2);
+  const [brushSize, setBrushSize] = useState(DEFAULT_BRUSH_SIZE);
 
   useEffect(() => {
     if (currentUser && !currentUser.color) {
@@ -30,13 +37,12 @@ const Canvas = () => {
   }, [currentUser, connectSocket, navigate]);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
-    const isErasing = tool === 'eraser'
-
-    const paintingColor = currentUser?.color || '#000000'
+    const isErasing = tool === 'eraser';
+    const paintingColor = currentUser?.color || DEFAULT_COLOR;
 
     const stage = e.target.getStage();
     if (!stage) return;
-    const pos = e.target.getStage()?.getPointerPosition();
+    const pos = stage.getPointerPosition();
     if (!pos) return;
 
     const newLine = {
@@ -44,7 +50,7 @@ const Canvas = () => {
       data: {
         tool: 'pencil',
         points: [pos.x, pos.y],
-        stroke: isErasing ? '#242424' : paintingColor,
+        stroke: isErasing ? ERASER_COLOR : paintingColor,
         strokeWidth: brushSize,
         lineCap: 'round',
         lineJoin: 'round',
@@ -77,46 +83,15 @@ const Canvas = () => {
 
   return (
     <div className="flex flex-row items-start">
-      <div className="w-64 p-4">
-        <h3 className="text-lg font-bold mb-4">Connected Users</h3>
-        <ul className="space-y-2">
-          {users.map((user: User) => (
-            <li key={user.userId} className="text-sm">
-              <span
-                className="inline-block w-4 h-4 mr-2 rounded-full"
-                style={{ backgroundColor: user.color }}
-              ></span>
-              {user.username}
-            </li>
-          ))}
-        </ul>
-      </div>
-
+      <UserList />
       <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <div className="flex space-x-4 mb-4">
-          <select
-            className="border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setTool(e.target.value)}
-            value={tool}
-          >
-            <option value="pencil">Pencil</option>
-            <option value="eraser">Eraser</option>
-          </select>
-          <input
-            type="number"
-            min="1"
-            max="20"
-            className="w-16 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            value={brushSize}
-            onChange={(e) => setBrushSize(Number(e.target.value))}
-          />
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:ring-2 focus:ring-red-300"
-            onClick={handleClearCanvas}
-          >
-            Clear Canvas
-          </button>
-        </div>
+        <Toolbar
+          tool={tool}
+          setTool={setTool}
+          brushSize={brushSize}
+          setBrushSize={setBrushSize}
+          handleClearCanvas={handleClearCanvas}
+        />
         <Stage
           ref={stageRef}
           width={window.innerWidth - 256}
@@ -128,7 +103,7 @@ const Canvas = () => {
         >
           <Layer>
             {drawings.map((drawing) => (
-              <Line key={drawing.id+uuid()} {...drawing.data} />
+              <Line key={drawing.id + uuid()} {...drawing.data} />
             ))}
             {currentLine && <Line {...currentLine.data} />}
           </Layer>
