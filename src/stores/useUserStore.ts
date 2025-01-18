@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5175'); // Replace with your backend URL if necessary
+const socket = io('http://localhost:5175');
 
 export interface User {
   userId: string;
