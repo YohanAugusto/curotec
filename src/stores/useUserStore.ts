@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5175'); // Replace with your backend URL if necessary
+const socket = io('http://localhost:5175'); // In case you have a backend in another server, replace with your URL if necessary
 
 export interface User {
   userId: string;
@@ -22,7 +22,6 @@ interface StoreState {
   addUser: (username: string) => void;
   connectSocket: () => void;
   addDrawing: (drawing: Drawing) => void;
-  removeDrawing: (id: string) => void;
 }
 
 const useUserStore = create<StoreState>((set) => ({
@@ -57,10 +56,6 @@ const useUserStore = create<StoreState>((set) => ({
 
   addDrawing: (drawing) => {
     socket.emit('addDrawing', drawing);
-  },
-
-  removeDrawing: (id) => {
-    socket.emit('removeDrawing', id);
   }
 }));
 
