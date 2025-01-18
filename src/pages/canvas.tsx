@@ -22,17 +22,6 @@ const Canvas = () => {
   }, [currentUser]);
 
   useEffect(() => {
-    const savedDrawings = JSON.parse(sessionStorage.getItem('canvasState') || '[]');
-    if (savedDrawings) {
-      savedDrawings.forEach((drawing: Drawing) => addDrawing(drawing));
-    }
-  }, [addDrawing]);
-
-  useEffect(() => {
-    sessionStorage.setItem('canvasState', JSON.stringify(drawings));
-  }, [drawings]);
-
-  useEffect(() => {
     if (!currentUser) {
       navigate('/');
       return;

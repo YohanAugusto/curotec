@@ -2,12 +2,12 @@
 import { create } from 'zustand';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5175');
+const socket = io('http://localhost:5175'); // Replace with your backend URL if necessary
 
 export interface User {
   userId: string;
   username: string;
-  color?: string
+  color?: string;
 }
 
 export interface Drawing {
@@ -22,6 +22,7 @@ interface StoreState {
   addUser: (username: string) => void;
   connectSocket: () => void;
   addDrawing: (drawing: Drawing) => void;
+  removeDrawing: (id: string) => void;
 }
 
 const useUserStore = create<StoreState>((set) => ({
@@ -37,14 +38,30 @@ const useUserStore = create<StoreState>((set) => ({
 
   connectSocket: () => {
     socket.on('updateUsers', (users) => set({ users }));
+
     socket.on('newDrawing', (drawing) =>
-      set((state) => ({ drawings: [...state.drawings, drawing] }))
+      set((state) => {
+        const updatedDrawings = [...state.drawings, drawing];
+        sessionStorage.setItem('canvasState', JSON.stringify(updatedDrawings));
+        return { drawings: updatedDrawings };
+      })
     );
+
+    // Load persisted state from session storage
+    const savedDrawings = JSON.parse(sessionStorage.getItem('canvasState') || '[]');
+    if (savedDrawings.length > 0) {
+      savedDrawings.forEach((drawing: Drawing) => socket.emit('newDrawing', drawing));
+      set({ drawings: savedDrawings });
+    }
   },
 
   addDrawing: (drawing) => {
     socket.emit('addDrawing', drawing);
   },
+
+  removeDrawing: (id) => {
+    socket.emit('removeDrawing', id);
+  }
 }));
 
 export default useUserStore;
