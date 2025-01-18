@@ -14,7 +14,7 @@ This project is a web application built with modern technologies including React
 
 ## TODO
 
-Properly remove erase the lines when select erase tool. Need more time to make it work as expected.
+Properly way to erase the lines when select erase tool. Need more time to make it work as expected.
 
 ## Getting Started
 
